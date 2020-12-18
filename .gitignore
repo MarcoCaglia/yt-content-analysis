@@ -1,2 +1,10 @@
 # Local Settings
 .vscode
+
+# Caches
+*_cache
+_*cache__
+
+# Experimental outputs
+test.json
+test.log

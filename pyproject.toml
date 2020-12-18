@@ -6,9 +6,19 @@ authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
+Scrapy = "^2.4.1"
+selenium = "^3.141.0"
+python-dotenv = "^0.15.0"
+scrapy-selenium = {git = "https://github.com/MarcoCaglia/scrapy-selenium.git", rev = "enhancement/script-before-wait-event"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+jupyterlab = "^2.2.9"
+pycodestyle = "^2.6.0"
+mypy = "^0.790"
+black = "^20.8b1"
+pydocstyle = "^5.1.1"
+pylama = "^7.7.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
