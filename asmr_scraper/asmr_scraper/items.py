@@ -16,3 +16,4 @@ class AsmrScraperItem(scrapy.Item):
     likes = scrapy.Field()
     dislikes = scrapy.Field()
     comments = scrapy.Field()
+    timestamp = scrapy.Field()
