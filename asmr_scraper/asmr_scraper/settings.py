@@ -7,6 +7,7 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+import os
 from shutil import which
 
 BOT_NAME = 'asmr_scraper'
@@ -22,8 +23,11 @@ SELENIUM_DRIVER_ARGUMENTS = ['--headless']
 
 # Log Options
 LOG_STDOUT = True
-LOG_FILE = 'test.log'
+LOG_FILE = os.getenv('LOG_PATH') if os.getenv('LOG_PATH') else "./scraping_log.log"
 LOG_LEVEL = "INFO"
+
+# Pipeline Options
+DATA_PATH = os.getenv('DATA_PATH') if os.getenv('DATA_PATH') else "./data.db"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -75,9 +79,9 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'asmr_scraper.pipelines.AsmrScraperPipeline': 300,
-#}
+ITEM_PIPELINES = {
+   'asmr_scraper.pipelines.SqlPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html

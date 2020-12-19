@@ -1,4 +1,6 @@
+import logging
 import os
+from datetime import datetime as dt
 
 from dotenv import load_dotenv
 from scrapy.http.request import Request
@@ -30,14 +32,17 @@ class ContentCrawlerSpider(CrawlSpider):
     # )
 
     def start_requests(self):
-        scroll_script = self.get_scroll_script()
+        scroll_script = self.get_scroll_script(
+            scroll_depth=os.getenv("SCROLL_DEPTH"),
+            wait_time=os.getenv("MAX_WAIT_ON_SCROLL")
+        )
         min_elements = os.getenv("MIN_ELEMENTS")
 
         for url in self.start_urls:
             yield SeleniumRequest(
                 url=url,
                 script=scroll_script,
-                wait_time=30,
+                wait_time=60,
                 wait_until=count_elements(
                     (By.XPATH, '//*[@id="video-title"]'),
                     min_elements
@@ -50,12 +55,14 @@ class ContentCrawlerSpider(CrawlSpider):
             '//*[@id="video-title"]//@href'
             ).extract()
 
+        logging.info(f"Found {len(links)} links from {response.url}...")
+
         for link in links:
             yield SeleniumRequest(
                 url="https://www.youtube.com" + link,
                 callback=self.get_video_info,
-                wait_time=10,
-                script="scrollBy(0, 10000)",
+                wait_time=30,
+                script=self.get_scroll_script(2),
                 wait_until=EC.visibility_of_any_elements_located(
                     (By.XPATH, '//*[@id="count"]/yt-formatted-string')
                     )
@@ -71,19 +78,21 @@ class ContentCrawlerSpider(CrawlSpider):
         item["likes"] = response.selector.css("yt-formatted-string::attr(aria-label)").extract()[0]
         item["dislikes"] = response.selector.css("yt-formatted-string::attr(aria-label)").extract()[1]
         item["comments"] = response.selector.xpath('//*[@id="count"]/yt-formatted-string/text()').extract_first()
+        item["timestamp"] = dt.now()
 
         yield item
 
-    def get_scroll_script(self):
-        js_script = """
-        async function scroller() {
-            for (i=0; i<=SCROLL_DEPTH; i++) {
+    def get_scroll_script(self, scroll_depth=10, wait_time=5):
+        wait_time = str(int(wait_time) * 10 ** 3)
+        js_script = f"""
+        async function scroller() {{
+            for (i=0; i<={scroll_depth}; i++) {{
                 window.scrollBy(0, 10000)
-                await new Promise(r => setTimeout(r, 3000));
-            }
-        }
+                await new Promise(r => setTimeout(r, {wait_time}));
+            }}
+        }}
 
         scroller()
-        """.replace("SCROLL_DEPTH", os.getenv('SCROLL_DEPTH'))
+        """
 
         return js_script
