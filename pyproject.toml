@@ -12,6 +12,7 @@ python-dotenv = "^0.15.0"
 scrapy-selenium = {git = "https://github.com/MarcoCaglia/scrapy-selenium.git", rev = "enhancement/script-before-wait-event"}
 SQLAlchemy = "^1.3.22"
 pandas = "^1.1.5"
+bokeh = "^2.2.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
