@@ -20,7 +20,6 @@ class count_elements(object):
     def __call__(self, driver):
         elements = driver.find_elements(*self.locator)   # Finding the referenced element
         is_robots_txt = self.check_robot(driver)
-        print(len(elements))
         if (len(elements) >= self.count) or is_robots_txt:
             return elements
         else:
