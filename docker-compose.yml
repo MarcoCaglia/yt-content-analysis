@@ -1,0 +1,20 @@
+version: "3.7"
+services:
+  minio:
+    image: minio/minio
+    container_name: minio
+    volumes:
+      - ./data/buckets:/data:consistent
+    expose:
+      - "9000"
+    ports:
+      - "9000:9000"
+    environment:
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+    command: minio server /data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
