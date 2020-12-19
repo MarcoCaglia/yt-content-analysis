@@ -15,3 +15,6 @@ test.log
 #Ipython notebooks
 .ipyng_checkpoints
 *.ipynb
+
+# Minio Buckets
+data/buckets
