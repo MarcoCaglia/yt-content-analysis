@@ -8,3 +8,10 @@ _*cache__
 # Experimental outputs
 test.json
 test.log
+
+# Any log files
+*.log
+
+#Ipython notebooks
+.ipyng_checkpoints
+*.ipynb
