@@ -20,6 +20,7 @@ def test_input():
 @pytest.fixture
 def expected_output():
     expected_output = pd.read_csv(TEST_OUTPUT_PATH)
+    expected_output.upload_date = pd.to_datetime(expected_output.upload_date)
 
     return expected_output
 
