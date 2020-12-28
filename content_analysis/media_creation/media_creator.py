@@ -23,9 +23,13 @@ class MediaCreator:
     def generate_overviews(
         self,
         grouper: str = "author",
-        features: List[str] = ["like_ratio", "comments_per_view",
-                               "likes_per_view", "views"],
-        aggregator: str = "mean"
+        features: List[str] = [
+            "like_ratio",
+            "comments_per_view",
+            "likes_per_view",
+            "views",
+        ],
+        aggregator: str = "mean",
     ) -> List[BokePlot]:
         """Generate Overview Graphs.
 
@@ -45,9 +49,12 @@ class MediaCreator:
         """
         plots = []
         for feature in features:
-            grouped_data = self.data.groupby(grouper)[[feature]] \
-                .agg(aggregator).reset_index() \
+            grouped_data = (
+                self.data.groupby(grouper)[[feature]]
+                .agg(aggregator)
+                .reset_index()
                 .sort_values(by=feature, ascending=False)
+            )
             source = ColumnDataSource(data=grouped_data)
 
             plot = self._create_overview_plot(
@@ -55,8 +62,8 @@ class MediaCreator:
                 feature=feature,
                 source=source,
                 aggregator=aggregator,
-                x_range=grouped_data[grouper].tolist()
-                )
+                x_range=grouped_data[grouper].tolist(),
+            )
             plots.append(plot)
 
         return plots
@@ -67,25 +74,26 @@ class MediaCreator:
         feature: str,
         source: ColumnDataSource,
         aggregator: str,
-        x_range: List[str]
+        x_range: List[str],
     ) -> BokePlot:
         tooltip = [
-                (self._prettify_string(grouper), "@" + grouper),
-                (self._prettify_string(grouper), "@" + feature)
-            ]
+            (self._prettify_string(grouper), "@" + grouper),
+            (self._prettify_string(grouper), "@" + feature),
+        ]
         plot = figure(
             tools="pan,box_zoom,reset,save",
             y_axis_label=self._prettify_string(feature),
             x_axis_label=self._prettify_string(grouper),
             x_range=x_range,
-            tooltips=tooltip
+            tooltips=tooltip,
         )
 
         plot.vbar(x=grouper, top=feature, source=source, width=0.9)
         plot.title.text = (
             f"{self._prettify_string(aggregator)} of "
             f"{self._prettify_string(feature)} per "
-            f"{self._prettify_string(grouper)}")
+            f"{self._prettify_string(grouper)}"
+        )
         plot.title.align = "center"
         plot.title.text_font_size = "20px"
 
@@ -93,9 +101,13 @@ class MediaCreator:
 
     def generate_ot_plots(
         self,
-        features: List[str] = ["like_ratio", "comments_per_view",
-                               "likes_per_view", "views"],
-        date_column: str = "upload_date"
+        features: List[str] = [
+            "like_ratio",
+            "comments_per_view",
+            "likes_per_view",
+            "views",
+        ],
+        date_column: str = "upload_date",
     ) -> List[BokePlot]:
         """Create List of over-time comparison plots for selected features.
 
@@ -109,19 +121,15 @@ class MediaCreator:
         Returns:
             List[BokePlot]: List of Bokeh Plots.
         """
-        ot_data = self.data.sort_values(by=date_column).set_index("author") \
-            .copy()
+        ot_data = self.data.sort_values(by=date_column).set_index("author").copy()
 
         tooltips = [
             ("Author", "@author"),
             ("Upload Date", "@upload_date{%F}"),
-            ("Title", "@title")
+            ("Title", "@title"),
         ]
 
-        formatters = {
-            "@author": "printf",
-            "@upload_date": "datetime"
-        }
+        formatters = {"@author": "printf", "@upload_date": "datetime"}
 
         plots = []
 
@@ -131,11 +139,14 @@ class MediaCreator:
                 feature=feature,
                 date_column=date_column,
                 tooltips=tooltips,
-                formatters=formatters
+                formatters=formatters,
             )
 
             plot.legend.location = "top_left"
             plot.legend.click_policy = "hide"
+            plot.title.text = (
+                f"{self._prettify_string(feature)} per Author " "Over Time"
+            )
 
             plots.append(plot)
 
@@ -147,20 +158,18 @@ class MediaCreator:
         feature: str,
         date_column: str,
         tooltips: List[Tuple[str, str]],
-        formatters: Dict
+        formatters: Dict,
     ) -> BokePlot:
         plot = figure(
             tools="pan,box_zoom,reset,save",
             y_axis_label=self._prettify_string(feature),
             x_axis_label=self._prettify_string(date_column),
-            x_axis_type="datetime"
+            x_axis_type="datetime",
         )
         hovertool = HoverTool(
-            tooltips=tooltips + [
-                (self._prettify_string(feature), "@" + feature)
-                ],
-            formatters=formatters
-            )
+            tooltips=tooltips + [(self._prettify_string(feature), "@" + feature)],
+            formatters=formatters,
+        )
         plot.add_tools(hovertool)
 
         plot = self._add_lines(plot, ot_data, date_column, feature)
@@ -169,10 +178,7 @@ class MediaCreator:
 
     @staticmethod
     def _add_lines(
-        plot: BokePlot,
-        ot_data: pd.DataFrame,
-        date_column: str,
-        feature: str
+        plot: BokePlot, ot_data: pd.DataFrame, date_column: str, feature: str
     ) -> BokePlot:
         for author, colour in zip(ot_data.index.unique(), Spectral4):
             tmp = ot_data.loc[[author], [date_column, feature, "title"]].copy()
@@ -182,14 +188,14 @@ class MediaCreator:
                 feature,
                 source=source,
                 legend_label=author,
-                fill_color=colour
-                )
+                fill_color=colour,
+            )
             plot.line(
                 date_column,
                 feature,
                 source=source,
                 legend_label=author,
-                line_color=colour
+                line_color=colour,
             )
         return plot
 
