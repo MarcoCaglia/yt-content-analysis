@@ -142,15 +142,23 @@ class MediaCreator:
                 formatters=formatters,
             )
 
-            plot.legend.location = "top_left"
-            plot.legend.click_policy = "hide"
-            plot.title.text = (
-                f"{self._prettify_string(feature)} per Author " "Over Time"
-            )
+            plot = self._set_plot_settings(plot, feature)
 
             plots.append(plot)
 
         return plots
+
+    def _set_plot_settings(self, plot, feature):
+        plot.legend.location = "top_left"
+        plot.legend.click_policy = "hide"
+        plot.title.text = (
+            f"{self._prettify_string(feature)} per Author " "Over Time"
+        )
+
+        plot.title.align = "center"
+        plot.title.text_font_size = "20px"
+
+        return plot
 
     def _create_ot_plot(
         self,
