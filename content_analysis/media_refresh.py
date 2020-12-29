@@ -1,16 +1,19 @@
 """Module housing a refresh script for the graphs."""
 
-import pandas as pd
 from pathlib import Path
-from .media_creator import MediaCreator
-from .preprocessing import Preprocessor
-from sqlalchemy import create_engine
-from .exceptions import NoDataError
-from bokeh.plotting.figure import Figure as BokehPlot
-from bokeh.plotting import save
 from typing import List
 
-DATA_PATH = Path(".").absolute().parent.parent.joinpath("data/data.db")
+import pandas as pd
+from bokeh.plotting import save
+from bokeh.plotting.figure import Figure as BokehPlot
+from sqlalchemy import create_engine
+from bokeh.resources import CDN
+
+from media_creation.exceptions import NoDataError
+from media_creation.media_creator import MediaCreator
+from media_creation.preprocessing import Preprocessor
+
+DATA_PATH = Path(".").absolute().joinpath("data/data.db")
 OVERVIEW_PATH = DATA_PATH.parent.joinpath("overviews")
 OT_PATH = DATA_PATH.parent.joinpath("ot_graphs")
 
@@ -56,7 +59,17 @@ def _save_graphs(
         if not directory.is_dir():
             directory.mkdir()
         for graph in objects:
-            save(graph, directory.joinpath(graph.title.text + ".html"))
+            save(
+                graph,
+                directory.joinpath(_generate_filename(graph.title.text)),
+                resources=CDN,
+                title=graph.title.text
+                )
+
+
+def _generate_filename(string: str) -> str:
+    title = string.replace(" ", "_").lower() + ".html"
+    return title
 
 
 if __name__ == "__main__":
