@@ -7,10 +7,14 @@
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
-        <!-- here a css bootstratp could be added, but skipped for now-->
+        <!-- here a css bootstratp could be added, but we don't need it now-->
         <title> YT Creator Dashboard</title>
     </head>
     <body>
         <h1>YT-Creator-Dashboard</h1>
+        <div class="topnav">
+            <a class="active" href="{% url 'home' %}">Home</a>
+            <a href="{% url 'overviews' %}">Overviews</a>
+            <a href="{% url 'ot_graphs' % }">Overtime</a>
     </body>
 </html>

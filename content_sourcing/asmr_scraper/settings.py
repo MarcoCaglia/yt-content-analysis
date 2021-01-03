@@ -8,6 +8,7 @@
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
 import os
+from pathlib import Path
 from shutil import which
 
 BOT_NAME = 'asmr_scraper'
@@ -27,8 +28,8 @@ LOG_FILE = os.getenv('LOG_PATH') if os.getenv('LOG_PATH') else "./scraping_log.l
 LOG_LEVEL = "INFO"
 
 # Pipeline Options
-DATA_PATH = os.getenv('DATA_PATH') if os.getenv('DATA_PATH') else "./data.db"
-
+DATABASE_NAME = os.getenv("DATABASE_NAME")
+DATA_PATH = Path(os.getenv("DATA_PATH")).absolute().joinpath(DATABASE_NAME)
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'asmr_scraper (+http://www.yourdomain.com)'
