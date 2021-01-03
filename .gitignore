@@ -21,3 +21,7 @@ data/buckets
 
 # Local DVC config
 .dvc
+
+# Media Graphs
+data/ot_graphs
+data/overviews
