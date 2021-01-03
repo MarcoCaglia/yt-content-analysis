@@ -19,5 +19,7 @@ from visuals import views as visuals_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", visuals_views.welcome, name="welcome")
+    path("", visuals_views.home, name="home"),
+    path("overviews", visuals_views.overviews, name="overviews"),
+    path("overtime", visuals_views.ot_graphs, name="ot_graphs")
 ]
