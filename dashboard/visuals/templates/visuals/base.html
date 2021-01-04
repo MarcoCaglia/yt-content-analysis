@@ -9,13 +9,22 @@
         />
         <!-- here a css bootstratp could be added, but we don't need it now-->
         <title> YT Creator Dashboard</title>
+        {% if scripts %}
+            {% for script in scripts %}
+                {{ script |safe }}
+            {% endfor %}
+        {% endif %}
+        <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-2.2.3.min.js" integrity="sha384-T2yuo9Oe71Cz/I4X9Ac5+gpEa5a8PpJCDlqKYO0CfAuEszu1JrXLl8YugMqYe3sM" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            Bokeh.set_log_level("info");
+        </script>
     </head>
     <body>
         <h1>YT-Creator-Dashboard</h1>
         <div class="topnav">
             <a class="active" href="{% url 'home' %}">Home</a>
             <a href="{% url 'overviews' %}">Overviews</a>
-            <a href="{% url 'ot_graphs' % }">Overtime</a>
+            <a href="{% url 'overtime' %}">Overtime</a>
         </div>
         {% block content %}{% endblock %}
     </body>

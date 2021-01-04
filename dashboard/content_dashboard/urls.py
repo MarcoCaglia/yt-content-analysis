@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", visuals_views.home, name="home"),
     path("overviews", visuals_views.overviews, name="overviews"),
-    path("overtime", visuals_views.ot_graphs, name="ot_graphs")
+    path("overtime", visuals_views.ot_graphs, name="overtime")
 ]

@@ -1,5 +1,6 @@
 {% extends "visuals/base.html" %} {% block content %}
 <h2>{{title}}</h2>
-{% for graph in graphs %}
-
+{% for div in divs %}
+    {{div | safe}}
+    {% endfor %}
 {% endblock content %}
