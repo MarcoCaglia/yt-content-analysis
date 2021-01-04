@@ -154,6 +154,7 @@ class MediaCreator:
         plot.title.text = (
             f"{self._prettify_string(feature)} per Author " "Over Time"
         )
+        plot.width = 1500
 
         plot.title.align = "center"
         plot.title.text_font_size = "20px"
