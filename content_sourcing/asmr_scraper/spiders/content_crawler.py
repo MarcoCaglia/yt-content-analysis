@@ -1,9 +1,12 @@
+"""Spider for Youtube stats scraping."""
+
 import logging
 import os
 from datetime import datetime as dt
+from pathlib import Path
 
+import yaml
 from dotenv import load_dotenv
-from scrapy.http.request import Request
 from scrapy.spiders import CrawlSpider
 from scrapy_selenium.http import SeleniumRequest
 from selenium.webdriver.common.by import By
@@ -12,24 +15,17 @@ from selenium.webdriver.support import expected_conditions as EC
 from ..items import AsmrScraperItem
 from ..utils import count_elements
 
-# load_dotenv(dotenv_path=Path(".").absolute().parent)
 load_dotenv()
+
+PROJECTS_PATH = Path(__file__).absolute().parent.parent.parent.parent \
+    .joinpath("properties").joinpath("projects.yml")
 
 
 class ContentCrawlerSpider(CrawlSpider):
     name = 'content_crawler'
     allowed_domains = ['youtube.com']
-    start_urls = [
-        "https://www.youtube.com/c/GibiASMR/videos",
-        "https://www.youtube.com/c/FrivolousFoxASMR/videos",
-        "https://www.youtube.com/c/RoseASMR/videos",
-        "https://www.youtube.com/c/ASMRGlow/videos",
-        "https://www.youtube.com/channel/UClMJgjg2z_IrRm6J9KrhcuQ/videos",
-    ]
-
-    # rules = (
-    #     Rule(LinkExtractor(allow=r'Items/'), callback='parse_item', follow=True),
-    # )
+    with PROJECTS_PATH.open("r") as f:
+        start_urls = yaml.safe_load(f)[os.getenv("PROJECT_TAG")]
 
     def start_requests(self):
         scroll_script = self.get_scroll_script(
@@ -79,6 +75,7 @@ class ContentCrawlerSpider(CrawlSpider):
         item["dislikes"] = response.selector.css("yt-formatted-string::attr(aria-label)").extract()[1]
         item["comments"] = response.selector.xpath('//*[@id="count"]/yt-formatted-string/text()').extract_first()
         item["timestamp"] = dt.now()
+        item["comments"] = response.selector.xpath('//*[@id="content-text"]')
 
         yield item
 
