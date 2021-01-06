@@ -17,6 +17,7 @@ class AsmrScraperItem(scrapy.Item):
     dislikes = scrapy.Field()
     comments = scrapy.Field()
     timestamp = scrapy.Field()
+    project_tag = scrapy.Field()
     video_link = scrapy.Field()
     video_id = scrapy.Field()
     comments = scrapy.Field()

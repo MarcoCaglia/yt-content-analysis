@@ -78,6 +78,7 @@ class ContentCrawlerSpider(CrawlSpider):
         item["comments"] = response.selector.xpath('//*[@id="count"]/yt-formatted-string/text()').extract_first()
         item["timestamp"] = dt.now()
         item["video_url"] = response.url
+        item["project_tag"] = os.getenv("PROJECT_TAG")
         item["video_id"] = str(uuid.uuid4())
         item["comments"] = response.selector.xpath('//*[@id="content-text"]/text()').extract()
 
