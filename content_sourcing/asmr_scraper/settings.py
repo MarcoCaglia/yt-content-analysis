@@ -26,7 +26,7 @@ SELENIUM_DRIVER_EXECUTABLE_PATH = which('chromedriver')
 SELENIUM_DRIVER_ARGUMENTS = ['--headless']
 
 # Log Options
-LOG_STDOUT = False
+LOG_STDOUT = True
 LOG_FILE = os.getenv('LOG_PATH') if os.getenv('LOG_PATH') else "./scraping_log.log"
 LOG_LEVEL = "INFO"
 
