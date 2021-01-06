@@ -2,6 +2,7 @@
 
 import logging
 import os
+import uuid
 from datetime import datetime as dt
 from pathlib import Path
 
@@ -76,6 +77,8 @@ class ContentCrawlerSpider(CrawlSpider):
         item["dislikes"] = response.selector.css("yt-formatted-string::attr(aria-label)").extract()[1]
         item["comments"] = response.selector.xpath('//*[@id="count"]/yt-formatted-string/text()').extract_first()
         item["timestamp"] = dt.now()
+        item["video_url"] = response.url
+        item["video_id"] = str(uuid.uuid4())
         item["comments"] = response.selector.xpath('//*[@id="content-text"]/text()').extract()
 
         yield item
