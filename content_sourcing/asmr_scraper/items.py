@@ -18,6 +18,6 @@ class AsmrScraperItem(scrapy.Item):
     comments = scrapy.Field()
     timestamp = scrapy.Field()
     project_tag = scrapy.Field()
-    video_link = scrapy.Field()
+    video_url = scrapy.Field()
     video_id = scrapy.Field()
     comments = scrapy.Field()
