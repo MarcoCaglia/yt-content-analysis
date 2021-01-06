@@ -27,7 +27,6 @@ class SqlPipeline:
     VIDEO_TABLE_NAME = "video_info"
     COMMENTS_TABLE_NAME = "comments"
 
-
     def __init__(self, data_path) -> None:
         self.data_path = os.path.abspath(data_path)
 
