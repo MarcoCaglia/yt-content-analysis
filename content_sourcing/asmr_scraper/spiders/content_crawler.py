@@ -59,8 +59,9 @@ class ContentCrawlerSpider(CrawlSpider):
                 callback=self.get_video_info,
                 wait_time=30,
                 script=self.get_scroll_script(2),
-                wait_until=EC.visibility_of_any_elements_located(
-                    (By.XPATH, '//*[@id="count"]/yt-formatted-string')
+                wait_until=count_elements(
+                    (By.XPATH, '//*[@id="content-text"]'),
+                    35
                     )
                 )
 
@@ -75,7 +76,7 @@ class ContentCrawlerSpider(CrawlSpider):
         item["dislikes"] = response.selector.css("yt-formatted-string::attr(aria-label)").extract()[1]
         item["comments"] = response.selector.xpath('//*[@id="count"]/yt-formatted-string/text()').extract_first()
         item["timestamp"] = dt.now()
-        item["comments"] = response.selector.xpath('//*[@id="content-text"]')
+        item["comments"] = response.selector.xpath('//*[@id="content-text"]/text()').extract()
 
         yield item
 
