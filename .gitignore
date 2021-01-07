@@ -25,3 +25,6 @@ data/buckets
 # Media Graphs
 data/ot_graphs
 data/overviews
+
+# Notes
+note.md
