@@ -4,7 +4,8 @@
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 
 
-import os
+import logging
+from pathlib import Path
 
 import pandas as pd
 # useful for handling different item types with a single interface
@@ -28,7 +29,7 @@ class SqlPipeline:
     COMMENTS_TABLE_NAME = "comments"
 
     def __init__(self, data_path) -> None:
-        self.data_path = os.path.abspath(data_path)
+        self.data_path = Path(data_path).as_posix()
 
         self.con = None
 
@@ -39,6 +40,7 @@ class SqlPipeline:
         )
 
     def open_spider(self, spider):
+        logging.info(f"Writing Data to DB: {self.data_path}")
         self.con = create_engine("sqlite:///" + self.data_path)
 
     def process_item(self, item, spider):

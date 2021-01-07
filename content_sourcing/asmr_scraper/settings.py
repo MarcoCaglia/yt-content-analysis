@@ -14,6 +14,8 @@ import dotenv
 
 dotenv.load_dotenv()
 
+ROOT_DIR = Path(__file__).absolute().parent.parent.parent
+
 BOT_NAME = 'asmr_scraper'
 
 SPIDER_MODULES = ['asmr_scraper.spiders']
@@ -32,7 +34,7 @@ LOG_LEVEL = "INFO"
 
 # Pipeline Options
 DATABASE_NAME = os.getenv("DATABASE_NAME")
-DATA_PATH = Path(os.getenv("DATA_PATH")).absolute().joinpath(DATABASE_NAME)
+DATA_PATH = ROOT_DIR.joinpath(os.getenv("DATA_PATH")).joinpath(DATABASE_NAME)
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'asmr_scraper (+http://www.yourdomain.com)'
