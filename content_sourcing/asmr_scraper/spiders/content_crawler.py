@@ -18,11 +18,15 @@ from ..utils import count_elements
 
 load_dotenv()
 
-PROJECTS_PATH = Path(__file__).absolute().parent.parent.parent.parent \
-    .joinpath("properties").joinpath("projects.yml")
-
 
 class ContentCrawlerSpider(CrawlSpider):
+
+    # Setting custom class variables
+    PROJECTS_PATH = Path(__file__).absolute().parent.parent.parent.parent \
+        .joinpath("properties").joinpath("projects.yml")
+    RESTRICTION_PATH = Path(__file__).absolute().parent.parent.parent.parent \
+        .joinpath("properties").joinpath("video_restrictions.yml")
+
     name = 'content_crawler'
     allowed_domains = ['youtube.com']
     with PROJECTS_PATH.open("r") as f:
@@ -33,7 +37,10 @@ class ContentCrawlerSpider(CrawlSpider):
             scroll_depth=os.getenv("SCROLL_DEPTH"),
             wait_time=os.getenv("MAX_WAIT_ON_SCROLL")
         )
-        min_elements = os.getenv("MIN_ELEMENTS")
+
+        # Loading Author specific video count restrictions
+        with ContentCrawlerSpider.RESTRICTION_PATH.open("r") as f:
+            video_restrictions = yaml.safe_load(f)
 
         for url in self.start_urls:
             yield SeleniumRequest(
@@ -42,7 +49,9 @@ class ContentCrawlerSpider(CrawlSpider):
                 wait_time=60,
                 wait_until=count_elements(
                     (By.XPATH, '//*[@id="video-title"]'),
-                    min_elements
+                    count=video_restrictions.get(
+                        url, os.getenv("MIN_ELEMENTS")
+                        )
                     ),
                 callback=self.extract_video_links
                 )
