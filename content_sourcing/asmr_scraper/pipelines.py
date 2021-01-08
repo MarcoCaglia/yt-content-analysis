@@ -22,7 +22,7 @@ class SqlPipeline:
 
     VIDEO_INFO_FILEDS = [
         "title", "upload_date", "views", "author", "likes", "dislikes",
-        "comments", "timestamp", "video_url", "video_id", "project_tag"
+        "timestamp", "video_url", "video_id", "project_tag"
         ]
     COMMENTS_FIELDS = ["video_id", "comments"]
     VIDEO_TABLE_NAME = "video_info"
