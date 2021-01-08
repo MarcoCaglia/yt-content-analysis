@@ -23,11 +23,16 @@ def _create_media(kind):
     if not DATA_PATH.is_file():
         raise NoDataError(f"No DB at {DATA_PATH}")
 
-    # Create DB for loading the data
+    # Create DB connection for loading the data
     engine = create_engine(f"sqlite:///{DATA_PATH.as_posix()}")
 
-    # Load the data with pandas
-    data = pd.read_sql("SELECT * FROM video_info", engine)
+    # Load the data with pandas and filter by currently active project tag
+    # (Project Tag as specified in .env file)
+    project_tag = os.getenv("PROJECT_TAG")
+    data = pd.read_sql(
+        f"SELECT * FROM video_info WHERE project_tag = '{project_tag}'",
+        engine
+        )
 
     # Preprocess the data
     preprocessed = Preprocessor(data).preprocess()
