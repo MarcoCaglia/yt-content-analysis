@@ -60,7 +60,10 @@ class Preprocessor:
 
         return data
 
-    def _get_numerical_value(self, text):
-        numerical = re.sub(self.anti_numerical_pattern, "", text)
+    def _get_numerical_value(self, value):
+        if isinstance(value, (int, float)):
+            numerical = value
+        else:
+            numerical = re.sub(self.anti_numerical_pattern, "", str(value))
 
         return numerical
