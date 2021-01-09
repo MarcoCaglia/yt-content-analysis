@@ -7,13 +7,12 @@ import pytest
 from bokeh.plotting.figure import Figure as BokePlot
 from content_analysis.media_creation.media_creator import MediaCreator
 from content_analysis.media_creation.preprocessing import Preprocessor
-
-TEST_DATA_PATH = Path("./tests/data/preprocessor_input.csv")
+from .preprocessing_test import TEST_INPUT, INPUT_COLUMNS
 
 
 @pytest.fixture
 def test_data():
-    test_data = pd.read_csv(TEST_DATA_PATH)
+    test_data = pd.DataFrame(TEST_INPUT, columns=INPUT_COLUMNS)
 
     test_data = Preprocessor(test_data).preprocess()
 
