@@ -84,7 +84,7 @@ class ContentCrawlerSpider(CrawlSpider):
         item["author"] = response.selector.xpath('//*[@id="text"]/a/text()').extract_first()
         item["likes"] = response.selector.css("yt-formatted-string::attr(aria-label)").extract()[0]
         item["dislikes"] = response.selector.css("yt-formatted-string::attr(aria-label)").extract()[1]
-        item["comments"] = response.selector.xpath('//*[@id="count"]/yt-formatted-string/text()').extract_first()
+        item["comments_nr"] = response.selector.xpath('//*[@id="count"]/yt-formatted-string/text()').extract_first()
         item["timestamp"] = dt.now()
         item["video_url"] = response.url
         item["project_tag"] = os.getenv("PROJECT_TAG")
