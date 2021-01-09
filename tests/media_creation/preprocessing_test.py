@@ -10,7 +10,8 @@ TEST_INPUT = [
     ['[ASMR- NO TALKING] 👅 👄ALL THE MOUTH SOUNDS! w/ Tascam Tapping ~ 👄👅 (this will knock you tf out)', 'Jun 8, 2020', '3,471,617 views', 'FrivolousFox ASMR', '59,115 likes', '3,400 dislikes', '7,156 Comments', '2020-12-19 10:52:49.038966'],
     ['ASMR Come Antique Shopping With Me', 'May 13, 2019', '269,848 views', 'Goodnight Moon', '9,785 likes', '98 dislikes', '497 Comments', '2020-12-19 11:20:45.193789'],
     ['ASMR | Poker Set // Cards, Chips, Dice, Wooden Box ~', 'Sep 22, 2020', '645,829 views', 'Gibi ASMR', '18,440 likes', '476 dislikes', '1,918 Comments', '2020-12-19 11:09:09.903929'],
-    ['Gibi ASMR | Pure Finger Flutters Trigger [Compilation]', 'Oct 27, 2020', '364,127 views', 'Gibi ASMR', '14,679 likes', '229 dislikes', '1,711 Comments', '2020-12-19 11:11:05.214979']
+    ['Gibi ASMR | Pure Finger Flutters Trigger [Compilation]', 'Oct 27, 2020', '364,127 views', 'Gibi ASMR', '14,679 likes', '229 dislikes', '1,711 Comments', '2020-12-19 11:11:05.214979'],
+    ['Gibi ASMR | Pure Finger Flutters Trigger [Compilation]', 'Premiered 4 hours ago', '364,127 views', 'Gibi ASMR', '14,679 likes', '229 dislikes', '1,711 Comments', '2020-12-19 11:11:05.214979']
 ]
 
 OUTPUT_COLUMNS = ['title', 'upload_date', 'views', 'author', 'likes', 'dislikes', 'comments', 'timestamp', 'like_ratio', 'likes_per_view', 'dislikes_per_view', 'comments_per_view']

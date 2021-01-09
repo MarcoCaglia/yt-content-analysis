@@ -30,8 +30,10 @@ class Preprocessor:
 
     def _parse_upload_date(self, data):
         data.upload_date = pd.to_datetime(
-            data.upload_date.map(lambda date: date[-12:])
+            data.upload_date.map(lambda date: date[-12:]),
+            errors="coerce"
             )
+        data.dropna(subset=["upload_date"], inplace=True)
 
         return data
 
