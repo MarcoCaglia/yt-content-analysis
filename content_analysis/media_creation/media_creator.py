@@ -4,7 +4,7 @@ from typing import Dict, List, Tuple
 
 import pandas as pd
 from bokeh.models import HoverTool
-from bokeh.palettes import Spectral4
+from bokeh.palettes import Spectral11
 from bokeh.plotting import ColumnDataSource, figure
 from bokeh.plotting.figure import Figure as BokePlot
 
@@ -88,6 +88,8 @@ class MediaCreator:
             tooltips=tooltip,
         )
 
+        plot.width = 1500
+
         plot.vbar(x=grouper, top=feature, source=source, width=0.9)
         plot.title.text = (
             f"{self._prettify_string(aggregator)} of "
@@ -139,7 +141,7 @@ class MediaCreator:
                 feature=feature,
                 date_column=date_column,
                 tooltips=tooltips,
-                formatters=formatters,
+                formatters=formatters
             )
 
             plot = self._set_plot_settings(plot, feature)
@@ -189,7 +191,7 @@ class MediaCreator:
     def _add_lines(
         plot: BokePlot, ot_data: pd.DataFrame, date_column: str, feature: str
     ) -> BokePlot:
-        for author, colour in zip(ot_data.index.unique(), Spectral4):
+        for author, colour in zip(ot_data.index.unique(), Spectral11):
             tmp = ot_data.loc[[author], [date_column, feature, "title"]].copy()
             source = ColumnDataSource(tmp)
             plot.circle(

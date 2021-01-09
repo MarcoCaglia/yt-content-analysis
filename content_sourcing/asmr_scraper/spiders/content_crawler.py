@@ -1,9 +1,13 @@
+"""Spider for Youtube stats scraping."""
+
 import logging
 import os
+import uuid
 from datetime import datetime as dt
+from pathlib import Path
 
+import yaml
 from dotenv import load_dotenv
-from scrapy.http.request import Request
 from scrapy.spiders import CrawlSpider
 from scrapy_selenium.http import SeleniumRequest
 from selenium.webdriver.common.by import By
@@ -12,31 +16,31 @@ from selenium.webdriver.support import expected_conditions as EC
 from ..items import AsmrScraperItem
 from ..utils import count_elements
 
-# load_dotenv(dotenv_path=Path(".").absolute().parent)
 load_dotenv()
 
 
 class ContentCrawlerSpider(CrawlSpider):
+
+    # Setting custom class variables
+    PROJECTS_PATH = Path(__file__).absolute().parent.parent.parent.parent \
+        .joinpath("properties").joinpath("projects.yml")
+    RESTRICTION_PATH = Path(__file__).absolute().parent.parent.parent.parent \
+        .joinpath("properties").joinpath("video_restrictions.yml")
+
     name = 'content_crawler'
     allowed_domains = ['youtube.com']
-    start_urls = [
-        "https://www.youtube.com/c/GibiASMR/videos",
-        "https://www.youtube.com/c/FrivolousFoxASMR/videos",
-        "https://www.youtube.com/c/RoseASMR/videos",
-        "https://www.youtube.com/c/ASMRGlow/videos",
-        "https://www.youtube.com/channel/UClMJgjg2z_IrRm6J9KrhcuQ/videos",
-    ]
-
-    # rules = (
-    #     Rule(LinkExtractor(allow=r'Items/'), callback='parse_item', follow=True),
-    # )
+    with PROJECTS_PATH.open("r") as f:
+        start_urls = yaml.safe_load(f)[os.getenv("PROJECT_TAG")]
 
     def start_requests(self):
         scroll_script = self.get_scroll_script(
             scroll_depth=os.getenv("SCROLL_DEPTH"),
             wait_time=os.getenv("MAX_WAIT_ON_SCROLL")
         )
-        min_elements = os.getenv("MIN_ELEMENTS")
+
+        # Loading Author specific video count restrictions
+        with ContentCrawlerSpider.RESTRICTION_PATH.open("r") as f:
+            video_restrictions = yaml.safe_load(f)
 
         for url in self.start_urls:
             yield SeleniumRequest(
@@ -45,7 +49,9 @@ class ContentCrawlerSpider(CrawlSpider):
                 wait_time=60,
                 wait_until=count_elements(
                     (By.XPATH, '//*[@id="video-title"]'),
-                    min_elements
+                    count=video_restrictions.get(
+                        url, os.getenv("MIN_ELEMENTS")
+                        )
                     ),
                 callback=self.extract_video_links
                 )
@@ -63,8 +69,9 @@ class ContentCrawlerSpider(CrawlSpider):
                 callback=self.get_video_info,
                 wait_time=30,
                 script=self.get_scroll_script(2),
-                wait_until=EC.visibility_of_any_elements_located(
-                    (By.XPATH, '//*[@id="count"]/yt-formatted-string')
+                wait_until=count_elements(
+                    (By.XPATH, '//*[@id="content-text"]'),
+                    35
                     )
                 )
 
@@ -77,8 +84,12 @@ class ContentCrawlerSpider(CrawlSpider):
         item["author"] = response.selector.xpath('//*[@id="text"]/a/text()').extract_first()
         item["likes"] = response.selector.css("yt-formatted-string::attr(aria-label)").extract()[0]
         item["dislikes"] = response.selector.css("yt-formatted-string::attr(aria-label)").extract()[1]
-        item["comments"] = response.selector.xpath('//*[@id="count"]/yt-formatted-string/text()').extract_first()
+        item["comments_nr"] = response.selector.xpath('//*[@id="count"]/yt-formatted-string/text()').extract_first()
         item["timestamp"] = dt.now()
+        item["video_url"] = response.url
+        item["project_tag"] = os.getenv("PROJECT_TAG")
+        item["video_id"] = str(uuid.uuid4())
+        item["comments"] = response.selector.xpath('//*[@id="content-text"]/text()').extract()
 
         yield item
 

@@ -30,8 +30,10 @@ class Preprocessor:
 
     def _parse_upload_date(self, data):
         data.upload_date = pd.to_datetime(
-            data.upload_date.map(lambda date: date[-12:])
+            data.upload_date.map(lambda date: date[-12:]),
+            errors="coerce"
             )
+        data.dropna(subset=["upload_date"], inplace=True)
 
         return data
 
@@ -60,7 +62,10 @@ class Preprocessor:
 
         return data
 
-    def _get_numerical_value(self, text):
-        numerical = re.sub(self.anti_numerical_pattern, "", text)
+    def _get_numerical_value(self, value):
+        if isinstance(value, (int, float)):
+            numerical = value
+        else:
+            numerical = re.sub(self.anti_numerical_pattern, "", str(value))
 
         return numerical
