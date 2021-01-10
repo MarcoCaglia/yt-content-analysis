@@ -2,7 +2,7 @@ version: "3.7"
 services:
   minio:
     image: minio/minio
-    container_name: minio
+    container_name: s3
     volumes:
       - ./data/buckets:/data:consistent
     expose:
@@ -18,3 +18,25 @@ services:
       interval: 30s
       timeout: 20s
       retries: 3
+  mlflow:
+    image: mlflow_servr
+    build: experiment_tracking/.
+    container_name: mlflow
+    ports:
+      - "5000:5000"
+    environment:
+      - MLFLOW_S3_ENDPOINT_URL=http://s3:9000
+      - AWS_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
+      - AWS_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY}
+    command: mlflow server --backend-store-uri mysql+pymysql://user:password@db:3306/database --default-artifact-root s3://mlflow/ --host 0.0.0.0
+    depends_on:
+      - db
+  db:
+    image: mysql
+    container_name: db
+    command: --innodb_use_native_aio=0
+    environment:
+        - MYSQL_DATABASE=database
+        - MYSQL_USER=user
+        - MYSQL_PASSWORD=password
+        - MYSQL_ROOT_PASSWORD=admin123
