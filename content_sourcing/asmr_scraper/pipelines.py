@@ -57,6 +57,19 @@ class SqlPipeline:
         # (table) and name the uploaded table with the first element of the
         # table (name).
         for name, table in upload_data:
+            video_ids = ",".join(table.video_id.map(
+                lambda video_id: f"'{video_id}'")
+                )
+
+            # Delete duplicates from DB to refresh
+            with self.con.connect() as con:
+                con.execute(
+                    f"DELETE FROM video_info WHERE video_id IN ({video_ids})"
+                    )
+                con.execute(
+                    f"DELETE FROM comments WHERE video_id IN ({video_ids})"
+                    )
+
             table.to_sql(
                 name,
                 con=self.con,

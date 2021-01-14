@@ -1,8 +1,8 @@
 """Spider for Youtube stats scraping."""
 
+import hashlib
 import logging
 import os
-import uuid
 from datetime import datetime as dt
 from pathlib import Path
 
@@ -11,7 +11,6 @@ from dotenv import load_dotenv
 from scrapy.spiders import CrawlSpider
 from scrapy_selenium.http import SeleniumRequest
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
 
 from ..items import AsmrScraperItem
 from ..utils import count_elements
@@ -63,15 +62,20 @@ class ContentCrawlerSpider(CrawlSpider):
 
         logging.info(f"Found {len(links)} links from {response.url}...")
 
+        scroll_script = self.get_scroll_script(
+            scroll_depth=os.getenv("SCROLL_DEPTH"),
+            wait_time=os.getenv("MAX_WAIT_ON_SCROLL")
+        )
+
         for link in links:
             yield SeleniumRequest(
                 url="https://www.youtube.com" + link,
                 callback=self.get_video_info,
-                wait_time=30,
-                script=self.get_scroll_script(2),
+                wait_time=60,
+                script=scroll_script,
                 wait_until=count_elements(
                     (By.XPATH, '//*[@id="content-text"]'),
-                    35
+                    40
                     )
                 )
 
@@ -88,13 +92,13 @@ class ContentCrawlerSpider(CrawlSpider):
         item["timestamp"] = dt.now()
         item["video_url"] = response.url
         item["project_tag"] = os.getenv("PROJECT_TAG")
-        item["video_id"] = str(uuid.uuid4())
+        item["video_id"] = hashlib.sha256(item["title"].encode("utf-8")).hexdigest()
         item["comments"] = response.selector.xpath('//*[@id="content-text"]/text()').extract()
 
         yield item
 
     def get_scroll_script(self, scroll_depth=10, wait_time=5):
-        wait_time = str(int(wait_time) * 10 ** 3)
+        wait_time = str(float(wait_time) * 10 ** 3)
         js_script = f"""
         async function scroller() {{
             for (i=0; i<={scroll_depth}; i++) {{
