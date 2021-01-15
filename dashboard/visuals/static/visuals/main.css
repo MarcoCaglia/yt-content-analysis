@@ -1,0 +1,22 @@
+/*Give entire side a slight grey background */
+body {
+    background-color: #cac4c4;
+    text-align: center;
+}
+
+/* Give Topnav a light blue background */
+.topnav a {
+    float: middle;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    border: 2px solid blue;
+    width: 100px
+  } 
+
+h1 {
+    color: red;
+}
