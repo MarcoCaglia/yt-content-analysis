@@ -65,10 +65,16 @@ def overviews(request):
     media = _create_media("overviews")
     scripts, divs = zip(*media)
 
+    div_groups = _media_to_grid(divs)
+
     return render(
         request,
         "visuals/graphs.html",
-        {"scripts": scripts, "divs": divs, "title": "Overview Graphs"}
+        {
+            "scripts": scripts,
+            "div_groups": div_groups,
+            "title": "Overview Graphs"
+            }
         )
 
 
@@ -77,8 +83,27 @@ def ot_graphs(request):
     media = _create_media("ot_graphs")
     scripts, divs = zip(*media)
 
+    div_groups = _media_to_grid(divs)
+
     return render(
         request,
         "visuals/graphs.html",
-        {"scripts": scripts, "divs": divs, "title": "Overtime Graphs"}
+        {
+            "scripts": scripts,
+            "div_groups": div_groups,
+            "title": "Overtime Graphs"
+            }
         )
+
+
+def _media_to_grid(media_list):
+    # Set number of columns
+    cols = 2
+
+    row_cols = [
+        media_list[col * cols: (col + 1) * cols] for
+        col in
+        range(len(media_list) // cols + 1)
+        ]
+
+    return row_cols

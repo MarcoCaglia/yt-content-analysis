@@ -82,7 +82,8 @@ class ContentCrawlerSpider(CrawlSpider):
     def get_video_info(self, response):
         item = AsmrScraperItem()
 
-        item["title"] = response.selector.xpath('//*[@id="container"]/h1/yt-formatted-string/text()').extract_first()
+        video_title = response.selector.xpath('//*[@id="container"]/h1/yt-formatted-string/text()').extract_first()
+        item["title"] = video_title
         item["upload_date"] = response.selector.xpath('//*[@id="date"]/yt-formatted-string/text()').extract_first()
         item["views"] = response.selector.xpath('//*[@id="count"]/yt-view-count-renderer/span[1]/text()').extract_first()
         item["author"] = response.selector.xpath('//*[@id="text"]/a/text()').extract_first()
@@ -92,7 +93,7 @@ class ContentCrawlerSpider(CrawlSpider):
         item["timestamp"] = dt.now()
         item["video_url"] = response.url
         item["project_tag"] = os.getenv("PROJECT_TAG")
-        item["video_id"] = hashlib.sha256(item["title"].encode("utf-8")).hexdigest()
+        item["video_id"] = hashlib.sha256(video_title.encode("utf-8")).hexdigest()
         item["comments"] = response.selector.xpath('//*[@id="content-text"]/text()').extract()
 
         yield item
