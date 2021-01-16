@@ -1,22 +1,19 @@
-/*Give entire side a slight grey background */
+/* Give grey-ish background to document*/
 body {
-    background-color: #cac4c4;
-    text-align: center;
+    background-color: grey;
 }
 
-/* Give Topnav a light blue background */
-.topnav a {
-    float: middle;
-    display: block;
-    color: #f2f2f2;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    font-size: 17px;
-    border: 2px solid blue;
-    width: 100px
-  } 
+/* Give a bit more grey-ish background to navbar */
+#my-bar {
+    background-color: rgba(205, 216, 205, 0.027) !important;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    overflow: auto;
+}
 
-h1 {
-    color: red;
+a {
+    padding-left: 100px !important;
+    padding-right: 100px !important;
 }
