@@ -64,7 +64,7 @@ class SqlPipeline:
             # Delete duplicates from DB to refresh
             with self.con.connect() as con:
                 con.execute(
-                    f"DELETE FROM {table} WHERE video_id IN ({video_ids})"
+                    f"DELETE FROM {name} WHERE video_id IN ({video_ids})"
                     )
 
             table.to_sql(
