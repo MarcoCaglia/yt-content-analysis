@@ -27,7 +27,7 @@ class ContentCrawlerSpider(CrawlSpider):
     # Set maximum number of seconds to wait for each request
     # (Roughly equivalent to Selenium's implicit wait, but suitable for
     # scraping)
-    MAX_WAIT_ON_REQUEST = os.getenv("MAX_WAIT_ON_REQUEST")
+    MAX_WAIT_ON_REQUEST = int(os.getenv("MAX_WAIT_ON_REQUEST"))
 
     name = 'content_crawler'
     allowed_domains = ['youtube.com']
