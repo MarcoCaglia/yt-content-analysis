@@ -4,7 +4,7 @@ import pandas as pd
 import pytest
 from content_analysis.media_creation.preprocessing import Preprocessor
 
-INPUT_COLUMNS = ['title', 'upload_date', 'views', 'author', 'likes', 'dislikes', 'comments', 'timestamp']
+INPUT_COLUMNS = ['title', 'upload_date', 'views', 'author', 'likes', 'dislikes', 'comments_nr', 'timestamp']
 TEST_INPUT = [
     ['Slow ASMR to Make You All Sleepy 😴', 'Dec 18, 2020', '104,424 views', 'ASMR Glow', '5,695 likes', '111 dislikes', '669 Comments', '2020-12-19 11:13:22.345294'],
     ['[ASMR- NO TALKING] 👅 👄ALL THE MOUTH SOUNDS! w/ Tascam Tapping ~ 👄👅 (this will knock you tf out)', 'Jun 8, 2020', '3,471,617 views', 'FrivolousFox ASMR', '59,115 likes', '3,400 dislikes', '7,156 Comments', '2020-12-19 10:52:49.038966'],
@@ -14,7 +14,7 @@ TEST_INPUT = [
     ['Gibi ASMR | Pure Finger Flutters Trigger [Compilation]', 'Premiered 4 hours ago', '364,127 views', 'Gibi ASMR', '14,679 likes', '229 dislikes', '1,711 Comments', '2020-12-19 11:11:05.214979']
 ]
 
-OUTPUT_COLUMNS = ['title', 'upload_date', 'views', 'author', 'likes', 'dislikes', 'comments', 'timestamp', 'like_ratio', 'likes_per_view', 'dislikes_per_view', 'comments_per_view']
+OUTPUT_COLUMNS = ['title', 'upload_date', 'views', 'author', 'likes', 'dislikes', 'comments_nr', 'timestamp', 'like_ratio', 'likes_per_view', 'dislikes_per_view', 'comments_per_view']
 EXPECTED_OUTPUT = [
     ['Slow ASMR to Make You All Sleepy 😴', '2020-12-18', 104424, 'ASMR Glow', 5695, 111, 669, '2020-12-19 11:13:22.345294', 0.9808818463658284, 0.0545372711254117, 0.0010629740289588, 0.0064065732015628],
     ['[ASMR- NO TALKING] 👅 👄ALL THE MOUTH SOUNDS! w/ Tascam Tapping ~ 👄👅 (this will knock you tf out)', '2020-06-08', 3471617, 'FrivolousFox ASMR', 59115, 3400, 7156, '2020-12-19 10:52:49.038966', 0.945613052867312, 0.0170280880638618, 0.0009793707082319, 0.0020612872906199],

@@ -1,20 +1,20 @@
 [tool.poetry]
 name = "yt-content-analysis"
 version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+description = "Contains code to source information about YouTube content creators and their videos and visualize it in a Django dashboard."
+authors = ["Marco Caglia <you@example.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
 Scrapy = "^2.4.1"
 selenium = "^3.141.0"
 python-dotenv = "^0.15.0"
-scrapy-selenium = {git = "https://github.com/MarcoCaglia/scrapy-selenium.git", rev = "enhancement/script-before-wait-event"}
 SQLAlchemy = "^1.3.22"
 pandas = "^1.1.5"
 bokeh = "^2.2.3"
 Django = "^3.1.4"
 scikit-learn = "^0.24.0"
+scrapy-selenium = {git = "https://github.com/MarcoCaglia/scrapy-selenium.git", rev = "feature/implicit-wait"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

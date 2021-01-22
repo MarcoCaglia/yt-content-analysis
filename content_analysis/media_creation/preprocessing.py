@@ -55,10 +55,10 @@ class Preprocessor:
         return data
 
     def _parse_comments(self, data):
-        data.comments = pd.to_numeric(
-            data.comments.map(self._get_numerical_value)
+        data.comments_nr = pd.to_numeric(
+            data.comments_nr.map(self._get_numerical_value)
             )
-        data["comments_per_view"] = data.comments / data.views
+        data["comments_per_view"] = data.comments_nr / data.views
 
         return data
 

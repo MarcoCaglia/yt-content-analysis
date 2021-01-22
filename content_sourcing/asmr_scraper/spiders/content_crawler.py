@@ -23,8 +23,11 @@ class ContentCrawlerSpider(CrawlSpider):
     # Setting custom class variables
     PROJECTS_PATH = Path(__file__).absolute().parent.parent.parent.parent \
         .joinpath("properties").joinpath("projects.yml")
-    RESTRICTION_PATH = Path(__file__).absolute().parent.parent.parent.parent \
-        .joinpath("properties").joinpath("video_restrictions.yml")
+
+    # Set maximum number of seconds to wait for each request
+    # (Roughly equivalent to Selenium's implicit wait, but suitable for
+    # scraping)
+    MAX_WAIT_ON_REQUEST = int(os.getenv("MAX_WAIT_ON_REQUEST"))
 
     name = 'content_crawler'
     allowed_domains = ['youtube.com']
@@ -37,22 +40,17 @@ class ContentCrawlerSpider(CrawlSpider):
             wait_time=os.getenv("MAX_WAIT_ON_SCROLL")
         )
 
-        # Loading Author specific video count restrictions
-        with ContentCrawlerSpider.RESTRICTION_PATH.open("r") as f:
-            video_restrictions = yaml.safe_load(f)
-
         for url in self.start_urls:
             yield SeleniumRequest(
                 url=url,
                 script=scroll_script,
-                wait_time=60,
+                wait_time=ContentCrawlerSpider.MAX_WAIT_ON_REQUEST,
                 wait_until=count_elements(
                     (By.XPATH, '//*[@id="video-title"]'),
-                    count=video_restrictions.get(
-                        url, os.getenv("MIN_ELEMENTS")
-                        )
+                    count=os.getenv("MIN_ELEMENTS")
                     ),
-                callback=self.extract_video_links
+                callback=self.extract_video_links,
+                move_on=True
                 )
 
     def extract_video_links(self, response):
@@ -71,12 +69,13 @@ class ContentCrawlerSpider(CrawlSpider):
             yield SeleniumRequest(
                 url="https://www.youtube.com" + link,
                 callback=self.get_video_info,
-                wait_time=60,
+                wait_time=ContentCrawlerSpider.MAX_WAIT_ON_REQUEST,
                 script=scroll_script,
                 wait_until=count_elements(
                     (By.XPATH, '//*[@id="content-text"]'),
-                    40
-                    )
+                    200
+                    ),
+                move_on=True
                 )
 
     def get_video_info(self, response):

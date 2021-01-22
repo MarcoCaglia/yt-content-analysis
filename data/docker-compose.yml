@@ -4,7 +4,7 @@ services:
     image: minio/minio
     container_name: minio
     volumes:
-      - ./data/buckets:/data:consistent
+      - ./buckets:/data:consistent
     expose:
       - "9000"
     ports:
