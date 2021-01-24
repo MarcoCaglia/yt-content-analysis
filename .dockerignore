@@ -1,0 +1,3 @@
+# All data paths, except data.db
+/data
+!/data/data.db
