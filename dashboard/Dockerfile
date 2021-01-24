@@ -11,6 +11,7 @@ COPY ./dashboard ./dashboard
 COPY ./data/data.db ./data/data.db
 COPY pyproject.toml .
 COPY poetry.lock .
+COPY .env .
 
 # Install poetry and create environment
 RUN pip3 install poetry
@@ -21,4 +22,4 @@ RUN poetry install --no-dev
 EXPOSE 8000
 
 # Run dashboard
-CMD ["python", "dashboard/manage.py", "runserver", "0.0.0.0", "8000"]
+CMD ["poetry", "run", "python3", "dashboard/manage.py", "runserver", "0.0.0.0:8000"]
