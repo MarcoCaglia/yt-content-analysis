@@ -28,3 +28,6 @@ data/overviews
 
 # Notes
 note.md
+
+# Local Bash convenience files
+ecr_login.sh
