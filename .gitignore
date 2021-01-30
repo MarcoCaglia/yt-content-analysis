@@ -31,3 +31,6 @@ note.md
 
 # Local Bash convenience files
 ecr_login.sh
+
+# Local Infrastructure for terraform
+infrastructure/*
