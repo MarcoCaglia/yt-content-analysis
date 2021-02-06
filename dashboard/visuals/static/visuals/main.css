@@ -1,0 +1,19 @@
+/* Give grey-ish background to document*/
+body {
+    background-color: grey;
+}
+
+/* Give a bit more grey-ish background to navbar */
+#my-bar {
+    background-color: rgba(205, 216, 205, 0.027) !important;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    overflow: auto;
+}
+
+a {
+    padding-left: 100px !important;
+    padding-right: 100px !important;
+}

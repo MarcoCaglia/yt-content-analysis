@@ -30,8 +30,10 @@ class Preprocessor:
 
     def _parse_upload_date(self, data):
         data.upload_date = pd.to_datetime(
-            data.upload_date.map(lambda date: date[-12:])
+            data.upload_date.map(lambda date: date[-12:]),
+            errors="coerce"
             )
+        data.dropna(subset=["upload_date"], inplace=True)
 
         return data
 
@@ -53,14 +55,17 @@ class Preprocessor:
         return data
 
     def _parse_comments(self, data):
-        data.comments = pd.to_numeric(
-            data.comments.map(self._get_numerical_value)
+        data.comments_nr = pd.to_numeric(
+            data.comments_nr.map(self._get_numerical_value)
             )
-        data["comments_per_view"] = data.comments / data.views
+        data["comments_per_view"] = data.comments_nr / data.views
 
         return data
 
-    def _get_numerical_value(self, text):
-        numerical = re.sub(self.anti_numerical_pattern, "", text)
+    def _get_numerical_value(self, value):
+        if isinstance(value, (int, float)):
+            numerical = value
+        else:
+            numerical = re.sub(self.anti_numerical_pattern, "", str(value))
 
         return numerical

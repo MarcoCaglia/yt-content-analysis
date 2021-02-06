@@ -23,11 +23,16 @@ def _create_media(kind):
     if not DATA_PATH.is_file():
         raise NoDataError(f"No DB at {DATA_PATH}")
 
-    # Create DB for loading the data
+    # Create DB connection for loading the data
     engine = create_engine(f"sqlite:///{DATA_PATH.as_posix()}")
 
-    # Load the data with pandas
-    data = pd.read_sql("SELECT * FROM video_info", engine)
+    # Load the data with pandas and filter by currently active project tag
+    # (Project Tag as specified in .env file)
+    project_tag = os.getenv("PROJECT_TAG")
+    data = pd.read_sql(
+        f"SELECT * FROM video_info WHERE project_tag = '{project_tag}'",
+        engine
+        )
 
     # Preprocess the data
     preprocessed = Preprocessor(data).preprocess()
@@ -60,10 +65,16 @@ def overviews(request):
     media = _create_media("overviews")
     scripts, divs = zip(*media)
 
+    div_groups = _media_to_grid(divs)
+
     return render(
         request,
         "visuals/graphs.html",
-        {"scripts": scripts, "divs": divs, "title": "Overview Graphs"}
+        {
+            "scripts": scripts,
+            "div_groups": div_groups,
+            "title": "Overview Graphs"
+            }
         )
 
 
@@ -72,8 +83,27 @@ def ot_graphs(request):
     media = _create_media("ot_graphs")
     scripts, divs = zip(*media)
 
+    div_groups = _media_to_grid(divs)
+
     return render(
         request,
         "visuals/graphs.html",
-        {"scripts": scripts, "divs": divs, "title": "Overtime Graphs"}
+        {
+            "scripts": scripts,
+            "div_groups": div_groups,
+            "title": "Overtime Graphs"
+            }
         )
+
+
+def _media_to_grid(media_list):
+    # Set number of columns
+    cols = 2
+
+    row_cols = [
+        media_list[col * cols: (col + 1) * cols] for
+        col in
+        range(len(media_list) // cols + 1)
+        ]
+
+    return row_cols
